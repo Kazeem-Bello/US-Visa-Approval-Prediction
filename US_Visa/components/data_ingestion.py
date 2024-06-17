@@ -58,6 +58,8 @@ class DataIngestion:
             logging.info("Exporting train and test file path")
             train_set.to_csv(self.data_ingestion_config.train_file_path, index = False, header = True)
             test_set.to_csv(self.data_ingestion_config.test_file_path, index = False, header = True)
+            logging.info(f"Shape of the train set:{train_set.shape}")
+            logging.info(f"Shape of the test set:{test_set.shape}")
             logging.info("Exported train and test file path")
         except Exception as e:
             raise us_visa_exception(e, sys) from e
