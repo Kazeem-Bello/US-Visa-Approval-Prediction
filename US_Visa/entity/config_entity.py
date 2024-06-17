@@ -21,3 +21,6 @@ class dataingestionconfig:
     test_file_path: str = os.path.join(data_ingestion_dir, data_ingestion_ingested_dir, test_file_name)
     train_test_split_ratio: float = data_ingestion_train_test_split
     collection_name: str = data_ingestion_collection_name
+
+
+    
