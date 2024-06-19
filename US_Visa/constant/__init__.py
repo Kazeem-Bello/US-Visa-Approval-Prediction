@@ -15,7 +15,7 @@ model_file_name = "model.pkl"
 
 target_column = "case_study"
 
-current_date = date.today().year
+current_year = date.today().year
 
 preprocessing_object_file_name = "preprocessing.pkl"
 
