@@ -23,4 +23,20 @@ class dataingestionconfig:
     collection_name: str = data_ingestion_collection_name
 
 
+@dataclass
+class datavalidationconfig:
+    data_validation_dir: str = os.path.join(trainingpipeline_config.artifact_dir, data_validation_dir_name)
+    drift_report_file_path: str = os.path.join(data_validation_dir, data_validation_drift_report_dir, data_validation_drift_report_file_name)
+
+
+@dataclass
+class datatransformationconfig:
+    data_transformation_dir: str = os.path.join(trainingpipeline_config.artifact_dir, data_transformation_dir_name)
+    transformed_train_file_path: str = os.path.join(data_transformation_dir, data_transformation_transformed_data_dir, train_file_name.replace("csv", "npy"))
+    transformed_test_file_path: str = os.path.join(data_transformation_dir, data_transformation_transformed_data_dir, test_file_name.replace("csv", "npy"))
+    transformed_object_file_path: str = os.path.join(data_transformation_dir, data_transformation_transformed_object_dir, preprocessing_object_file_name)
+
+
+
+
     

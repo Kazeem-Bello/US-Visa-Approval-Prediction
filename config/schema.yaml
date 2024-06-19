@@ -12,12 +12,12 @@ columns:
  - full_time_position: category
  - case_status: category
 
- numerical_columns:
+numerical_columns:
  - no_of_employees 
  - yr_of_estab
  - prevailing_wage
 
- categorical_columns:
+categorical_columns:
  - case_id
  - continent
  - education_of_employee
@@ -28,23 +28,19 @@ columns:
  - full_time_position
  - case_status
 
- drop_columns:
+drop_columns:
  - case_id
-- yr_of_estab
+ - yr_of_estab
 
 # for data transformation
- numerical_columns:
- - no_of_employees 
- - yr_of_estab
- - prevailing_wage
 
- or_columns:
+or_columns:
  - has_job_experience 
  - requires_job_training
  - full_time_position
-  - education_of_employee
+ - education_of_employee
 
- oh_columns:
+oh_columns:
   - continent 
   - region_of_employment
   - unit_of_wage

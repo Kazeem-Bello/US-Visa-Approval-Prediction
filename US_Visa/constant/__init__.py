@@ -24,6 +24,7 @@ file_name: str = "us_visa.csv"
 train_file_name: str = "train.csv"
 
 test_file_name: str = "test.csv"
+schema_file_path = os.path.join("config", "schema.yaml")
 
 # Data Ingestion related constant 
 data_ingestion_collection_name: str = "us_visa-data"
@@ -33,9 +34,16 @@ data_ingestion_ingested_dir: str = "ingested"
 data_ingestion_train_test_split: float = 0.2
 
 # Data Validation related constant
-data_validation_dir_name = "data validation"
+data_validation_dir_name = "data_validation"
 data_validation_drift_report_dir = "drift_report"
 data_validation_drift_report_file_name = "report.yaml"
+
+# Data transformation related constant
+data_transformation_dir_name = "data_transformation"
+data_transformation_transformed_data_dir = "transformed"
+data_transformation_transformed_object_dir = "transformed_object"
+
+
 
 
 
