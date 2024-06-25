@@ -8,7 +8,7 @@ from us_visa.logger import logging
 
 class TargetValueMapping:
     def __init__ (self):
-        self.Certified: int = 0
+        self.Certified: int = 1
         self.Denied: int = 0
 
     def _asdict(self):

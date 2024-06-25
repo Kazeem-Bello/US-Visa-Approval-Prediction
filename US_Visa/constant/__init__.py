@@ -13,7 +13,7 @@ artifact_dir: str = "artifact"
 
 model_file_name = "model.pkl"
 
-target_column = "case_study"
+target_column = "case_status"
 
 current_year = date.today().year
 

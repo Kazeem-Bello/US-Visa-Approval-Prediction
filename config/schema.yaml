@@ -47,6 +47,6 @@ oh_columns:
 
 transform_columns:
  - no_of_employees 
- - yr_of_estab
+ - company_age
  - prevailing_wage
 
