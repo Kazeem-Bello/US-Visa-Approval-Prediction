@@ -43,6 +43,12 @@ data_transformation_dir_name = "data_transformation"
 data_transformation_transformed_data_dir = "transformed"
 data_transformation_transformed_object_dir = "transformed_object"
 
+# Model trainer related constant
+model_trainer_dir_name: str = "model_trainer"
+model_trainer_trained_model_dir: str = "trained_model"
+model_trainer_trained_model_name: str = "model.pkl"
+model_trainer_expected_score: float = 0.6
+
 
 
 

@@ -37,6 +37,13 @@ class datatransformationconfig:
     transformed_object_file_path: str = os.path.join(data_transformation_dir, data_transformation_transformed_object_dir, preprocessing_object_file_name)
 
 
+@dataclass
+class modeltrainerconfig:
+    model_trainer_dir: str = os.path.join(trainingpipeline_config.artifact_dir, model_trainer_dir_name)
+    trained_model_file_path: str = os.path.join(model_trainer_dir, model_trainer_trained_model_dir, model_trainer_dir_name)
+    expected_score: float = model_trainer_expected_score
+    model_config_file_path: str = os.path.join("config", "model.yaml")
+
 
 
     
