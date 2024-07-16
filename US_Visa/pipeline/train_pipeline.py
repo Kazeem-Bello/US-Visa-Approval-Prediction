@@ -3,8 +3,12 @@ from us_visa.components.data_ingestion import DataIngestion
 from us_visa.components.data_validation import DataValidation
 from us_visa.components.data_transformation import DataTransformation
 from us_visa.components.model_trainer import ModelTrainer
-from us_visa.entity.config_entity import dataingestionconfig, datavalidationconfig, datatransformationconfig, modeltrainerconfig
-from us_visa.entity.artifact_entity import dataingestionartifact,datavalidationartifact, datatransformationartifact, modeltrainerartifact
+from us_visa.components.model_pusher import ModelPusher
+from us_visa.components.model_evaluation import ModelEvaluation
+from us_visa.entity.config_entity import (dataingestionconfig, datavalidationconfig, datatransformationconfig, 
+                                          modeltrainerconfig, modelevaluationconfig, modelpusherconfig)
+from us_visa.entity.artifact_entity import (dataingestionartifact,datavalidationartifact, datatransformationartifact, 
+                                            modeltrainerartifact, modelevaluationartifact, modelpusherartifact)
 from us_visa.exception import us_visa_exception
 from us_visa.logger import logging
 
@@ -17,6 +21,8 @@ class trainpipeline:
         self.datavalidationconfig = datavalidationconfig()
         self.datatransformationconfig = datatransformationconfig()
         self.modeltrainerconfig = modeltrainerconfig()
+        self.modelevaluationconfig = modelevaluationconfig()
+        self.modelpusherconfig = modelpusherconfig()
 
     def start_data_ingestion(self) -> dataingestionartifact:
         "This method of the train_pipeline is responsible for starting the data ingestion component"
@@ -56,6 +62,22 @@ class trainpipeline:
             return model_trainer_artifact
         except Exception as e:
             raise us_visa_exception(e, sys) from e
+    def start_model_evaluation(self, data_ingestion_artifact: dataingestionartifact, model_trainer_artifact: modeltrainerartifact) -> modelevaluationartifact:
+        try: 
+            model_evaluation =  ModelEvaluation(model_eval_config = self.modelevaluationconfig, model_trainer_artifact = model_trainer_artifact,
+                                                data_ingestion_artifact = data_ingestion_artifact)
+            model_evaluation_artifact = model_evaluation.initiate_model_evaluation()
+            return model_evaluation_artifact
+        except Exception as e:
+            raise us_visa_exception(e, sys) from e
+    def start_model_pusher(self, model_evaluation_artifact = modelevaluationartifact) -> modelpusherartifact:
+        try: 
+            model_pusher = ModelPusher(model_evaluation_artifact = model_evaluation_artifact, model_pusher_config = self.modelpusherconfig)
+            model_pusher_artifact = model_pusher.initiate_model_pusher()
+            return model_pusher_artifact
+        except Exception as e:
+            raise us_visa_exception(e, sys) from e
+
     
     def run_pipeline(self):
         "This method of the train_pipeline is responsible for running the complete pipeline"
@@ -65,6 +87,12 @@ class trainpipeline:
             data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact = data_ingestion_artifact, 
                                                                           data_validation_artifact = data_validation_artifact)
             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact = data_transformation_artifact)
+            model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact = data_ingestion_artifact,
+                                                                     model_trainer_artifact = model_trainer_artifact)
+            if not model_evaluation_artifact.is_model_accepted:
+                logging.info("Model not accepted")
+                return None
+            model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact = model_evaluation_artifact)
             
         except Exception as e:
             raise us_visa_exception(e, sys) from e

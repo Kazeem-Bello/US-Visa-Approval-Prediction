@@ -44,6 +44,18 @@ class modeltrainerconfig:
     expected_score: float = model_trainer_expected_score
     model_config_file_path: str = os.path.join("config", "model.yaml")
 
+@dataclass
+class modelevaluationconfig:
+    change_in_threshold_score = model_evaluation_changed_threshold
+    bucket_name = model_bucket_name
+    s3_model_key_path = model_file_name
+
+@dataclass
+class modelpusherconfig:
+    bucket_name: str = model_bucket_name
+    s3_model_key_path = model_file_name
+    
+
 
 
     
