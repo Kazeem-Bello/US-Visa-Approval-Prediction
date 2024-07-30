@@ -58,7 +58,8 @@ model_evaluation_changed_threshold: float = 0.02
 model_bucket_name = "usvisa-model-bucket"
 model_pusher_s3_key = "model-resgistry"
 
-
+APP_HOST = "0.0.0.0"
+APP_PORT = 8080
 
 
 

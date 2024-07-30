@@ -54,7 +54,13 @@ class modelevaluationconfig:
 class modelpusherconfig:
     bucket_name: str = model_bucket_name
     s3_model_key_path = model_file_name
-    
+
+@dataclass
+class predictionconfig:
+    model_file_name = model_file_name
+    model_bucket_name = model_bucket_name
+
+
 
 
 
