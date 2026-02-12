@@ -1,12 +1,15 @@
 import os
 import pymongo
 import certifi
-from us_visa.constant import database_name, collection_name, connection_url
+from us_visa.constant import database_name, collection_name
 from us_visa.logger import logging
 from us_visa.exception import us_visa_exception, sys
+from dotenv import load_dotenv
 
 
 ca = certifi.where()
+load_dotenv()
+# connection_url = os.getenv("connection_url")
 
 
 class mongodb_client:
@@ -23,9 +26,9 @@ class mongodb_client:
     def __init__(self, database_name = database_name) -> None:
         try:
             if mongodb_client.client is None:
-                mongodb_url = os.getenv(connection_url)
+                mongodb_url = os.getenv("connection_url")
                 if mongodb_url is None:
-                    raise Exception(f"Environment key: {connection_url} is not set")
+                    raise Exception(f"Environment key: mongodb_url is not set")
                 mongodb_client.client = pymongo.MongoClient(mongodb_url, tlsCAFile = ca)   
                 self.client = mongodb_client.client
                 self.database = self.client[database_name]

@@ -19,9 +19,16 @@
 
 from us_visa.pipeline.train_pipeline import trainpipeline
 
-pipeline = trainpipeline()
-pipeline.run_pipeline()
+pipeline = trainpipeline().start_data_ingestion()
+# # pipeline.run_pipeline()
 
+# from dotenv import load_dotenv
+# import os
+
+# load_dotenv()
+
+# connection_url = os.getenv("connection_url")
+# print(connection_url)
 
 
 

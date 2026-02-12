@@ -1,6 +1,6 @@
 ipykernel
 pandas
-numpy
+numpy ==1.26.4
 matplotlib
 plotly
 seaborn
@@ -22,5 +22,6 @@ fastapi
 uvicorn
 jinja2
 python-multipart
+python-dotenv 
 -e .
 
