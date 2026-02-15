@@ -83,7 +83,7 @@ class ModelEvaluation:
                                            best_model_f1_score = best_model_f1_score,
                                            is_model_accepted = trained_model_f1_score > tmp_best_model_score,
                                            difference  = trained_model_f1_score - tmp_best_model_score
-                                           )
+                                m            )
             logging.info(f"Result: {result}")
             return result
 
