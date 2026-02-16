@@ -13,7 +13,7 @@ from us_visa.exception import us_visa_exception
 from us_visa.logger import logging
 from us_visa.utils.main_utils import load_numpy_array_data, read_yaml_file, load_object, save_object
 from us_visa.entity.config_entity import modeltrainerconfig
-from us_visa.entity.artifact_entity import datatransformationartifact, modeltrainerartifact, classificationmtericartifact
+from us_visa.entity.artifact_entity import datatransformationartifact, modeltrainerartifact, classificationmetricartifact
 from us_visa.entity.estimator import USvisaModel
 
 
@@ -34,7 +34,7 @@ class ModelTrainer:
             precision = precision_score(y_test, y_pred)
             recall = recall_score(y_test, y_pred)
             f1 = f1_score(y_test, y_pred)
-            metric_artifact = classificationmtericartifact(f1_score = f1, precision_score = precision, recall_score = recall)
+            metric_artifact = classificationmetricartifact(f1_score = f1, precision_score = precision, recall_score = recall)
 
             return best_model_detail, metric_artifact
 

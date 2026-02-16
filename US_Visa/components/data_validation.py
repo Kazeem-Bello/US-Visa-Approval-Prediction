@@ -2,14 +2,17 @@ import json
 import os
 import sys
 import pandas as pd
-from evidently.model_profile import Profile
-from evidently.model_profile.sections import DataDriftProfileSection
+# from evidently.model_profile import Profile
+# from evidently.model_profile.sections import DataDriftProfileSection
 from us_visa.exception import us_visa_exception
 from us_visa.logger import logging
 from us_visa.utils.main_utils import read_yaml_file, write_yaml_file
 from us_visa.entity.artifact_entity import dataingestionartifact, datavalidationartifact
 from us_visa.entity.config_entity import datavalidationconfig
 from us_visa.constant import schema_file_path
+# import json
+from evidently.report import Report
+from evidently.metric_preset import DataDriftPreset
 
 
 
@@ -63,23 +66,52 @@ class DataValidation:
             return pd.read_csv(file_path)
         except Exception as e:
             raise us_visa_exception(e, sys) from e
+        
+###############################################################
 
-    def detect_dataset_drift(self, reference_df: pd.DataFrame, current_df:pd.DataFrame) -> bool:
-        try: 
-            data_drift_profile = Profile(sections = [DataDriftProfileSection()])
-            data_drift_profile.calculate(reference_df, current_df)
-            report = data_drift_profile.json()
-            json_report = json.loads(report)
+    # def detect_dataset_drift(self, reference_df: pd.DataFrame, current_df:pd.DataFrame) -> bool:
+    #     try: 
+    #         data_drift_profile = Profile(sections = [DataDriftProfileSection()])
+    #         data_drift_profile.calculate(reference_df, current_df)
+    #         report = data_drift_profile.json()
+    #         json_report = json.loads(report)
 
-            write_yaml_file(file_path = self.data_validation_config.drift_report_file_path, content = json_report)
-            n_features = json_report["data_drift"]["data"]["metrics"]["n_features"]
-            n_drifted_features = json_report["data_drift"]["data"]["metrics"]["n_drifted_features"]
+    #         write_yaml_file(file_path = self.data_validation_config.drift_report_file_path, content = json_report)
+    #         n_features = json_report["data_drift"]["data"]["metrics"]["n_features"]
+    #         n_drifted_features = json_report["data_drift"]["data"]["metrics"]["n_drifted_features"]
 
-            logging.info(f"{n_drifted_features}/{n_features} drift detected.")
-            drift_status = json_report["data_drift"]["data"]["metrics"]["dataset_drift"]
-            return drift_status
+    #         logging.info(f"{n_drifted_features}/{n_features} drift detected.")
+    #         drift_status = json_report["data_drift"]["data"]["metrics"]["dataset_drift"]
+    #         return drift_status
+    #     except Exception as e:
+    #         raise us_visa_exception(e, sys) from e
+
+###########################################################################
+
+    def detect_dataset_drift(self, reference_df: pd.DataFrame, current_df: pd.DataFrame) -> bool:
+        try:
+            report = Report(metrics=[DataDriftPreset()])
+            report.run(reference_data=reference_df, current_data=current_df)
+
+            # Save report to JSON/YAML
+            report_json = report.as_dict()
+            write_yaml_file(
+                file_path=self.data_validation_config.drift_report_file_path,
+                content=report_json
+            )
+
+            # Extract drift summary (paths may vary slightly by version)
+            metrics = report_json["metrics"][0]["result"]
+            n_features = metrics.get("number_of_columns", metrics.get("n_features"))
+            n_drifted = metrics.get("number_of_drifted_columns", metrics.get("n_drifted_features"))
+            drift_status = metrics.get("dataset_drift", metrics.get("dataset_drift_detected"))
+
+            logging.info(f"{n_drifted}/{n_features} drifted columns. dataset_drift={drift_status}")
+            return bool(drift_status)
+
         except Exception as e:
             raise us_visa_exception(e, sys) from e
+
         
     def initiate_data_validation(self) -> datavalidationartifact:
         """

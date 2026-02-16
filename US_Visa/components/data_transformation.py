@@ -95,15 +95,25 @@ class DataTransformation:
                 feature_test_df = drop_columns(df = feature_test_df, cols = columns_to_drop)
                 logging.info(f"Dropped the {columns_to_drop} columns in the train and test data. Not needed for model training")
 
-                target_train_df = target_train_df.replace(TargetValueMapping()._asdict())
-                target_test_df = target_test_df.replace(TargetValueMapping()._asdict())
+                target_train_df = target_train_df.map({"Certified": 1, "Denied": 0})
+                target_test_df = target_test_df.map({"Certified": 1, "Denied": 0})
+                # target_train_df = target_train_df.replace(TargetValueMapping()._asdict())
+                # target_test_df = target_test_df.replace(TargetValueMapping()._asdict())
+
+                # # make sure labels are clean integers
+                # target_train_df = pd.to_numeric(target_train_df, errors="coerce").dropna().astype(int)
+                # target_test_df = pd.to_numeric(target_test_df, errors="coerce").dropna().astype(int)
+
+                # # align features with dropped rows
+                # feature_train_df = feature_train_df.loc[target_train_df.index]
+                # feature_test_df = feature_test_df.loc[target_test_df.index]
                 logging.info("Mapped the target variable to numerical variable")
 
                 logging.info("Applying the preprocessing object on the features of the train and test data")
-                # logging.info(f"the train features are {feature_train_df.columns}")
-                # logging.info(f"the test features are {feature_test_df.columns}")
-                # logging.info(f"the train target are {np.unique(target_train_df)}")
-                # logging.info(f"the test target are {np.unique(target_test_df)}")
+                logging.info(f"the train features are {feature_train_df.columns}")
+                logging.info(f"the test features are {feature_test_df.columns}")
+                logging.info(f"the train target are {np.unique(target_train_df)}")
+                logging.info(f"the test target are {np.unique(target_test_df)}")
 
                 processed_feature_train_df = processor.fit_transform(feature_train_df)
                 processed_feature_test_df = processor.transform(feature_test_df)
@@ -112,7 +122,8 @@ class DataTransformation:
                 logging.info("Applying SMOTEENN on the processed train and test data")
                 sm = SMOTEENN(sampling_strategy = "minority")
                 feature_train_df_final, target_train_df_final = sm.fit_resample(processed_feature_train_df, target_train_df)
-                feature_test_df_final, target_test_df_final = sm.fit_resample(processed_feature_test_df, target_test_df)
+                feature_test_df_final, target_test_df_final = processed_feature_test_df, target_test_df
+                # feature_test_df_final, target_test_df_final = sm.fit_resample(processed_feature_test_df, target_test_df)
                 logging.info("Applied SMOTEENN on the train and test data")
 
                 logging.info("Creating the train and test array")

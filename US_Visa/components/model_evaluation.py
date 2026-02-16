@@ -83,14 +83,14 @@ class ModelEvaluation:
                                            best_model_f1_score = best_model_f1_score,
                                            is_model_accepted = trained_model_f1_score > tmp_best_model_score,
                                            difference  = trained_model_f1_score - tmp_best_model_score
-                                m            )
+                                           )
             logging.info(f"Result: {result}")
             return result
 
         except Exception as e:
             raise us_visa_exception(e, sys) from e
 
-    def initiate_model_evaluation(self) -> modeltrainerartifact:
+    def initiate_model_evaluation(self) -> modelevaluationartifact:
         """
         Method Name :   initiate_model_evaluation
         Description :   This function is used to initiate all steps of the model evaluation
@@ -100,7 +100,7 @@ class ModelEvaluation:
         """  
         try:
             evaluate_model_response = self.evaluate_model()
-            s3_model_path = self.model_eval_config.s3_model_key_path
+            s3_model_path = self.model_eval_config.s3_model_key_path 
 
             model_evaluation_artifact = modelevaluationartifact(
                 is_model_accepted = evaluate_model_response.is_model_accepted,

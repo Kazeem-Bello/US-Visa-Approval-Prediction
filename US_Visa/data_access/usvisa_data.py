@@ -1,4 +1,4 @@
-from us_visa.constant import database_name, collection_name, connection_url
+from us_visa.constant import database_name, collection_name
 from us_visa.logger import logging
 from us_visa.exception import us_visa_exception, sys
 from us_visa.configuration.mongodb_connection import mongodb_client

@@ -19,7 +19,7 @@
 
 from us_visa.pipeline.train_pipeline import trainpipeline
 
-pipeline = trainpipeline().start_data_ingestion()
+pipeline = trainpipeline().run_pipeline()
 # # pipeline.run_pipeline()
 
 # from dotenv import load_dotenv
@@ -29,6 +29,8 @@ pipeline = trainpipeline().start_data_ingestion()
 
 # connection_url = os.getenv("connection_url")
 # print(connection_url)
+
+# print("welcome to our custom log")
 
 
 

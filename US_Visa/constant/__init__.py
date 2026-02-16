@@ -5,7 +5,7 @@ database_name = "us_visa"
 
 collection_name = "us_visa-data"
 
-connection_url = "mongodb_url"
+# connection_url = "mongodb_url"
 
 pipeline_name: str = "us_visa"
 
