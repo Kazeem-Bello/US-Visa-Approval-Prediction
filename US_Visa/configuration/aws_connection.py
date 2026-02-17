@@ -1,6 +1,14 @@
 import boto3
 import os
-from us_visa.constant import AWS_access_env_key, AWS_secret_acces_key_env_key, region_name
+# from us_visa.constant import AWS_access_env_key, AWS_secret_acces_key_env_key, region_name
+import sys
+from dotenv import load_dotenv
+
+load_dotenv() # take environment variables from .env.
+
+AWS_access_env_key = os.getenv("AWS_access_env_key")
+AWS_secret_acces_key_env_key = os.getenv("AWS_secret_acces_key_env_key")
+region_name = os.getenv("region_name")
 
 
 class S3Client:
@@ -14,12 +22,12 @@ class S3Client:
         """
         
         if S3Client.s3_resource == None or S3Client.s3_client == None:
-            __access_key_id = os.getenv(AWS_access_env_key)
-            __secret_access_key = os.getenv(AWS_secret_acces_key_env_key)
+            __access_key_id = AWS_access_env_key
+            __secret_access_key = AWS_secret_acces_key_env_key
             if __access_key_id is None:
-                raise Exception(f"Environment variable: {AWS_access_env_key} is not set.")
+                raise Exception(f"Environment variable: AWS_access_env_key is not set.")
             if __secret_access_key is None:
-                raise Exception(f"Environment variable: {AWS_secret_acces_key_env_key} is not set.")
+                raise Exception(f"Environment variable: AWS_secret_acces_key_env_key is not set.")
         
             S3Client.s3_resource = boto3.resource('s3',
                                             aws_access_key_id = __access_key_id,

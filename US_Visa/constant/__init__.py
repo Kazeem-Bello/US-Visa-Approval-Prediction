@@ -26,9 +26,9 @@ train_file_name: str = "train.csv"
 test_file_name: str = "test.csv"
 schema_file_path = os.path.join("config", "schema.yaml")
 
-AWS_access_env_key = "AWS_ACCESS_KEY_ID"
-AWS_secret_acces_key_env_key = "AWS_SECRET_ACCESS_KEY"
-region_name = "us-east-1"
+# AWS_access_env_key = "AWS_ACCESS_KEY_ID"
+# AWS_secret_acces_key_env_key = "AWS_SECRET_ACCESS_KEY"
+# region_name = "us-east-1"
 
 # Data Ingestion related constant 
 data_ingestion_collection_name: str = "us_visa-data"
@@ -55,7 +55,7 @@ model_trainer_expected_score: float = 0.6
 
 # Model pusher related constants
 model_evaluation_changed_threshold: float = 0.02
-model_bucket_name = "usvisa-model-bucket"
+model_bucket_name = "usvisa-model-folder"
 model_pusher_s3_key = "model-resgistry"
 
 APP_HOST = "0.0.0.0"

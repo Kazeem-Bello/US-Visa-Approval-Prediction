@@ -97,16 +97,6 @@ class DataTransformation:
 
                 target_train_df = target_train_df.map({"Certified": 1, "Denied": 0})
                 target_test_df = target_test_df.map({"Certified": 1, "Denied": 0})
-                # target_train_df = target_train_df.replace(TargetValueMapping()._asdict())
-                # target_test_df = target_test_df.replace(TargetValueMapping()._asdict())
-
-                # # make sure labels are clean integers
-                # target_train_df = pd.to_numeric(target_train_df, errors="coerce").dropna().astype(int)
-                # target_test_df = pd.to_numeric(target_test_df, errors="coerce").dropna().astype(int)
-
-                # # align features with dropped rows
-                # feature_train_df = feature_train_df.loc[target_train_df.index]
-                # feature_test_df = feature_test_df.loc[target_test_df.index]
                 logging.info("Mapped the target variable to numerical variable")
 
                 logging.info("Applying the preprocessing object on the features of the train and test data")

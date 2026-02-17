@@ -55,21 +55,23 @@ class trainpipeline:
         except Exception as e:
             raise us_visa_exception(e, sys) from e
         
-    # def start_model_trainer(self, data_transformation_artifact:datatransformationartifact) -> modeltrainerartifact:
-    #     try:
-    #         model_trainer = ModelTrainer(data_transformation_artifact = data_transformation_artifact, model_trainer_config = self.modeltrainerconfig)
-    #         model_trainer_artifact = model_trainer.initiate_model_trainer()
-    #         return model_trainer_artifact
-    #     except Exception as e:
-    #         raise us_visa_exception(e, sys) from e
-    # def start_model_evaluation(self, data_ingestion_artifact: dataingestionartifact, model_trainer_artifact: modeltrainerartifact) -> modelevaluationartifact:
-    #     try: 
-    #         model_evaluation =  ModelEvaluation(model_eval_config = self.modelevaluationconfig, model_trainer_artifact = model_trainer_artifact,
-    #                                             data_ingestion_artifact = data_ingestion_artifact)
-    #         model_evaluation_artifact = model_evaluation.initiate_model_evaluation()
-    #         return model_evaluation_artifact
-    #     except Exception as e:
-    #         raise us_visa_exception(e, sys) from e
+    def start_model_trainer(self, data_transformation_artifact:datatransformationartifact) -> modeltrainerartifact:
+        try:
+            model_trainer = ModelTrainer(data_transformation_artifact = data_transformation_artifact, model_trainer_config = self.modeltrainerconfig)
+            model_trainer_artifact = model_trainer.initiate_model_trainer()
+            return model_trainer_artifact
+        except Exception as e:
+            raise us_visa_exception(e, sys) from e
+
+    def start_model_evaluation(self, data_ingestion_artifact: dataingestionartifact, model_trainer_artifact: modeltrainerartifact) -> modelevaluationartifact:
+        try: 
+            model_evaluation =  ModelEvaluation(model_eval_config = self.modelevaluationconfig, model_trainer_artifact = model_trainer_artifact,
+                                                data_ingestion_artifact = data_ingestion_artifact)
+            model_evaluation_artifact = model_evaluation.initiate_model_evaluation()
+            return model_evaluation_artifact
+        except Exception as e:
+            raise us_visa_exception(e, sys) from e
+
     # def start_model_pusher(self, model_evaluation_artifact = modelevaluationartifact) -> modelpusherartifact:
     #     try: 
     #         model_pusher = ModelPusher(model_evaluation_artifact = model_evaluation_artifact, model_pusher_config = self.modelpusherconfig)
@@ -86,9 +88,9 @@ class trainpipeline:
             data_validation_artifact = self.start_data_validation(data_ingestion_artifact = data_ingestion_artifact)
             data_transformation_artifact = self.start_data_transformation(data_ingestion_artifact = data_ingestion_artifact, 
                                                                           data_validation_artifact = data_validation_artifact)
-            # model_trainer_artifact = self.start_model_trainer(data_transformation_artifact = data_transformation_artifact)
-            # model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact = data_ingestion_artifact,
-            #                                                          model_trainer_artifact = model_trainer_artifact)
+            model_trainer_artifact = self.start_model_trainer(data_transformation_artifact = data_transformation_artifact)
+            model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact = data_ingestion_artifact,
+                                                                     model_trainer_artifact = model_trainer_artifact)
             # if not model_evaluation_artifact.is_model_accepted:
             #     logging.info("Model not accepted")
             #     return None
