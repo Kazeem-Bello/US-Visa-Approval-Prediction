@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>US Visa Approval Predictor</title>
+
+    <!-- Bootstrap 5.3 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Your static CSS -->
+    <!-- <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}" /> -->
+    <link rel="stylesheet" href="style.css" />
+
+  </head>
+
+  <body>
+    <!-- Top Nav -->
+    <nav class="navbar navbar-expand-lg navbar-dark app-nav">
+      <div class="container">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+          <span class="brand-mark">
+            <i class="bi bi-globe-americas"></i>
+          </span>
+          <span class="brand-text">US Visa Predictor</span>
+        </a>
+
+        <div class="d-none d-md-flex align-items-center gap-2">
+          <span class="badge badge-soft">
+            <i class="bi bi-shield-check me-1"></i> ML-powered
+          </span>
+          <span class="badge badge-soft">
+            <i class="bi bi-database-check me-1"></i> MongoDB
+          </span>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="hero">
+      <div class="container">
+        <div class="row align-items-center g-4">
+          <div class="col-lg-7">
+            <div class="hero-kicker">
+              <i class="bi bi-stars me-2"></i> Predict visa approval likelihood
+            </div>
+            <h1 class="hero-title">
+              US Visa Approval Prediction
+              <span class="hero-title-accent">in seconds</span>
+            </h1>
+            <p class="hero-subtitle">
+              Enter applicant and employer details to generate a classification result based on the trained model.
+              This UI is designed for clarity, speed, and modern presentation.
+            </p>
+
+            <div class="hero-stats">
+              <div class="stat">
+                <div class="stat-icon"><i class="bi bi-diagram-3"></i></div>
+                <div>
+                  <div class="stat-label">Pipeline</div>
+                  <div class="stat-value">Ingestion → Transform → Train</div>
+                </div>
+              </div>
+              <div class="stat">
+                <div class="stat-icon"><i class="bi bi-graph-up-arrow"></i></div>
+                <div>
+                  <div class="stat-label">Output</div>
+                  <div class="stat-value">Certified / Denied</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Inline SVG graphic (no external image needed) -->
+          <div class="col-lg-5">
+            <div class="hero-graphic card-glass">
+              <div class="graphic-header">
+                <div class="dot dot-red"></div>
+                <div class="dot dot-yellow"></div>
+                <div class="dot dot-green"></div>
+                <div class="ms-2 small text-white-50">Prediction Console</div>
+              </div>
+
+              <svg viewBox="0 0 640 360" class="svg-hero" role="img" aria-label="Predictive analytics illustration">
+                <defs>
+                  <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stop-color="#8b5cf6" />
+                    <stop offset="50%" stop-color="#22c55e" />
+                    <stop offset="100%" stop-color="#06b6d4" />
+                  </linearGradient>
+                  <filter id="blur" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="18" />
+                  </filter>
+                </defs>
+
+                <!-- background glow blobs -->
+                <circle cx="140" cy="90" r="70" fill="url(#g1)" opacity="0.35" filter="url(#blur)" />
+                <circle cx="480" cy="240" r="90" fill="url(#g1)" opacity="0.25" filter="url(#blur)" />
+
+                <!-- card -->
+                <rect x="90" y="60" width="460" height="240" rx="18" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.18)" />
+
+                <!-- small “chart” bars -->
+                <g opacity="0.95">
+                  <rect x="140" y="220" width="22" height="50" rx="6" fill="#22c55e" />
+                  <rect x="180" y="200" width="22" height="70" rx="6" fill="#60a5fa" />
+                  <rect x="220" y="180" width="22" height="90" rx="6" fill="#a78bfa" />
+                  <rect x="260" y="210" width="22" height="60" rx="6" fill="#06b6d4" />
+                  <rect x="300" y="160" width="22" height="110" rx="6" fill="#f59e0b" />
+                </g>
+
+                <!-- “workflow” nodes -->
+                <g>
+                  <circle cx="380" cy="150" r="12" fill="#22c55e" />
+                  <circle cx="430" cy="190" r="12" fill="#60a5fa" />
+                  <circle cx="480" cy="140" r="12" fill="#a78bfa" />
+                  <path d="M380 150 L430 190 L480 140" stroke="rgba(255,255,255,0.55)" stroke-width="3" fill="none" />
+                </g>
+
+                <!-- label -->
+                <text x="140" y="120" fill="rgba(255,255,255,0.85)" font-size="20" font-family="ui-sans-serif, system-ui">
+                  ML Decision Engine
+                </text>
+                <text x="140" y="145" fill="rgba(255,255,255,0.65)" font-size="14" font-family="ui-sans-serif, system-ui">
+                  features → preprocessing → classifier → result
+                </text>
+              </svg>
+
+              <div class="graphic-footer">
+                <span class="pill"><i class="bi bi-lightning-charge"></i> Fast inference</span>
+                <span class="pill"><i class="bi bi-check2-circle"></i> Validated inputs</span>
+                <span class="pill"><i class="bi bi-box-seam"></i> Artifacts tracked</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main">
+      <div class="container">
+        <div class="row g-4">
+          <!-- Form Card -->
+          <div class="col-lg-8">
+            <div class="app-card">
+              <div class="app-card-header">
+                <div>
+                  <h2 class="h5 mb-1">Visa Approval Form</h2>
+                  <p class="text-muted mb-0">Fill the fields below and run a prediction.</p>
+                </div>
+                <div class="chip">
+                  <i class="bi bi-clipboard-data me-2"></i> Input → Predict → Output
+                </div>
+              </div>
+
+              <form action="/" method="post" class="app-form">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label" for="continent">Continent</label>
+                    <select class="form-select" id="continent" name="continent" required>
+                      <option value="" disabled selected>Select continent</option>
+                      <option>Asia</option>
+                      <option>Africa</option>
+                      <option>North America</option>
+                      <option>Europe</option>
+                      <option>South America</option>
+                      <option>Oceania</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="education_of_employee">Education Level</label>
+                    <select class="form-select" id="education_of_employee" name="education_of_employee" required>
+                      <option value="" disabled selected>Select education</option>
+                      <option>High School</option>
+                      <option>Master's</option>
+                      <option>Bachelor's</option>
+                      <option>Doctorate</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="has_job_experience">Job Experience</label>
+                    <select class="form-select" id="has_job_experience" name="has_job_experience" required>
+                      <option value="" disabled selected>Select</option>
+                      <option>Y</option>
+                      <option>N</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="requires_job_training">Requires Training</label>
+                    <select class="form-select" id="requires_job_training" name="requires_job_training" required>
+                      <option value="" disabled selected>Select</option>
+                      <option>Y</option>
+                      <option>N</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="no_of_employees">Company Size (Employees)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="no_of_employees"
+                      name="no_of_employees"
+                      min="14500"
+                      max="40000"
+                      placeholder="e.g., 20000"
+                      required
+                    />
+                    <div class="form-text">Range: 14,500 to 40,000</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="region_of_employment">Region of Employment</label>
+                    <select class="form-select" id="region_of_employment" name="region_of_employment" required>
+                      <option value="" disabled selected>Select region</option>
+                      <option>West</option>
+                      <option>Northeast</option>
+                      <option>South</option>
+                      <option>Midwest</option>
+                      <option>Island</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="prevailing_wage">Prevailing Wage</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="prevailing_wage"
+                      name="prevailing_wage"
+                      min="600"
+                      max="70000"
+                      placeholder="e.g., 35000"
+                      required
+                    />
+                    <div class="form-text">Range: 600 to 70,000</div>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="unit_of_wage">Wage Unit</label>
+                    <select class="form-select" id="unit_of_wage" name="unit_of_wage" required>
+                      <option value="" disabled selected>Select unit</option>
+                      <option>Hour</option>
+                      <option>Week</option>
+                      <option>Month</option>
+                      <option>Year</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="full_time_position">Full-time Position</label>
+                    <select class="form-select" id="full_time_position" name="full_time_position" required>
+                      <option value="" disabled selected>Select</option>
+                      <option>Y</option>
+                      <option>N</option>
+                    </select>
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="company_age">Company Age (Years)</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="company_age"
+                      name="company_age"
+                      min="15"
+                      max="180"
+                      placeholder="e.g., 25"
+                      required
+                    />
+                    <div class="form-text">Range: 15 to 180</div>
+                  </div>
+
+                  <div class="col-12 d-flex gap-2 mt-2">
+                    <button class="btn btn-primary btn-lg flex-grow-1" type="submit">
+                      <i class="bi bi-magic me-2"></i> Predict Visa Status
+                    </button>
+                    <a class="btn btn-outline-light btn-lg" href="/">
+                      <i class="bi bi-arrow-counterclockwise me-2"></i> Reset
+                    </a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <!-- Result / Info Card -->
+          <div class="col-lg-4">
+            <div class="app-card sticky-card">
+              <div class="result-header">
+                <h3 class="h6 mb-1">Prediction Result</h3>
+                <p class="text-muted mb-0">Model output will appear below.</p>
+              </div>
+
+              <!-- Context-based result banner -->
+              <div class="result-banner" id="resultBanner">
+                <div class="result-icon">
+                  <i class="bi bi-info-circle"></i>
+                </div>
+                <div class="result-body">
+                  <div class="result-label">Visa Prediction Status</div>
+                  <div class="result-value">{{ context }}</div>
+                </div>
+              </div>
+
+              <hr class="hr-soft" />
+
+              <div class="small text-muted">
+                <div class="d-flex align-items-start gap-2 mb-2">
+                  <i class="bi bi-shield-lock mt-1"></i>
+                  <div>
+                    <div class="fw-semibold text-white">Security tip</div>
+                    Keep secrets (DB URI, keys) in environment variables.
+                  </div>
+                </div>
+
+                <div class="d-flex align-items-start gap-2">
+                  <i class="bi bi-folder2-open mt-1"></i>
+                  <div>
+                    <div class="fw-semibold text-white">Artifacts</div>
+                    Persist transformed arrays and preprocessing objects for reproducibility.
+                  </div>
+                </div>
+              </div>
+
+              <div class="mt-3">
+                <div class="mini-note">
+                  <i class="bi bi-lightbulb me-2"></i>
+                  You can enhance this UI later with input validation hints, loading states, and confidence scores.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+              <div class="text-muted small">
+                © {{ 2026 }} US Visa Predictor • Built for MLOps portfolio
+              </div>
+              <div class="text-muted small">
+                <i class="bi bi-github me-1"></i> Add your repo link here
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </main>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Optional: Simple styling based on output text -->
+    <script>
+      (function () {
+        const banner = document.getElementById("resultBanner");
+        if (!banner) return;
+
+        const raw = "{{ context }}";
+        const val = (raw || "").toLowerCase();
+
+        // Adjust these keywords to match your actual output text
+        if (val.includes("cert") || val.includes("approved") || val.includes("yes")) {
+          banner.classList.add("result-success");
+          banner.querySelector(".result-icon i").className = "bi bi-check2-circle";
+        } else if (val.includes("den") || val.includes("reject") || val.includes("no")) {
+          banner.classList.add("result-danger");
+          banner.querySelector(".result-icon i").className = "bi bi-x-circle";
+        } else {
+          banner.classList.add("result-neutral");
+          banner.querySelector(".result-icon i").className = "bi bi-info-circle";
+        }
+      })();
+    </script>
+  </body>
+</html>

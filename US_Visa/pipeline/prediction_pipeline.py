@@ -35,12 +35,7 @@ class UsvisaData:
         except Exception as e:
             raise us_visa_exception(e, sys) from e
         
-    def get_usvisa_input_data_frame(self) ->pd.DataFrame:
-        try:
-            usvisa_input_dict =self.get_usvisa_data_as_dict()
-            return pd.DataFrame(usvisa_input_dict)
-        except Exception as e:
-            raise us_visa_exception(e, sys) from e
+
         
     def get_usvisa_data_as_dict(self):
         logging.info("Entered get_visa_data_as_dict method of the USvisaDAta class")
@@ -59,11 +54,18 @@ class UsvisaData:
         
             logging.info("Created us_visa data dict")
             logging.info("Exited get_visa_data_as_dict method of the USvisaDAta class")
-
             return input_data
         except Exception as e:
             raise us_visa_exception(e, sys) from e
-        
+
+    def get_usvisa_input_data_frame(self) ->pd.DataFrame:
+        try:
+            usvisa_input_dict =self.get_usvisa_data_as_dict()
+            return pd.DataFrame(usvisa_input_dict)
+        except Exception as e:
+            raise us_visa_exception(e, sys) from e
+
+
 
 class USvisaClassifier:
     def __init__(self, prediction_config: predictionconfig = predictionconfig()) -> None:
