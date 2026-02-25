@@ -30,11 +30,11 @@ class ModelTrainer:
             best_model_detail = model_factory.get_best_model(X = x_train, y = y_train, base_accuracy = self.model_trainer_config.expected_score)
             model_obj = best_model_detail.best_model
             y_pred = model_obj.predict(x_test)
-            accuray = accuracy_score(y_test, y_pred)
+            accuracy = accuracy_score(y_test, y_pred)
             precision = precision_score(y_test, y_pred)
             recall = recall_score(y_test, y_pred)
             f1 = f1_score(y_test, y_pred)
-            metric_artifact = classificationmetricartifact(f1_score = f1, precision_score = precision, recall_score = recall)
+            metric_artifact = classificationmetricartifact(f1_score = f1, precision_score = precision, recall_score = recall, accuracy = accuracy)
 
             return best_model_detail, metric_artifact
 

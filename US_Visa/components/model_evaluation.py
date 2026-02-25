@@ -1,6 +1,6 @@
 from us_visa.entity.config_entity import modelevaluationconfig
 from us_visa.entity.artifact_entity import modeltrainerartifact, dataingestionartifact, modelevaluationartifact
-from sklearn.metrics import f1_score
+from sklearn.metrics import f1_score,accuracy_score
 from us_visa.exception import us_visa_exception
 from us_visa.constant import target_column, current_year
 from us_visa.logger import logging
@@ -15,7 +15,9 @@ from us_visa.entity.estimator import TargetValueMapping
 @dataclass
 class EvaluateModelResponse:
     trained_model_f1_score: float
+    trained_model_accuracy: float
     best_model_f1_score: float
+    best_model_accuracy: float
     is_model_accepted: bool
     difference: float
 
@@ -65,22 +67,24 @@ class ModelEvaluation:
             test_df['company_age'] = current_year -  test_df['yr_of_estab']
 
             x, y = test_df.drop(target_column, axis=1), test_df[target_column]
-            y = y.replace(
-                TargetValueMapping()._asdict()
-            )
+            y = y.map({"Certified": 1, "Denied": 0})
 
             # trained_model = load_object(file_path=self.model_trainer_artifact.trained_model_file_path)
             trained_model_f1_score = self.model_trainer_artifact.metric_artifact.f1_score
+            trained_model_accuracy = self.model_trainer_artifact.metric_artifact.accuracy
 
             best_model_f1_score = None
             best_model = self.get_best_model()
             if best_model is not None:
                 y_hat_best_model = best_model.predict(x)
                 best_model_f1_score = f1_score(y, y_hat_best_model)
+                best_model_accuracy = accuracy_score(y, y_hat_best_model)
             
             tmp_best_model_score = 0 if best_model_f1_score is None else best_model_f1_score
             result = EvaluateModelResponse(trained_model_f1_score = trained_model_f1_score,
+                                           trained_model_accuracy = trained_model_accuracy,
                                            best_model_f1_score = best_model_f1_score,
+                                           best_model_accuracy = best_model_accuracy if best_model_f1_score is not None else 0,
                                            is_model_accepted = trained_model_f1_score > tmp_best_model_score,
                                            difference  = trained_model_f1_score - tmp_best_model_score
                                            )
@@ -106,7 +110,9 @@ class ModelEvaluation:
                 is_model_accepted = evaluate_model_response.is_model_accepted,
                 s3_model_path = s3_model_path,
                 trained_model_path = self.model_trainer_artifact.trained_model_file_path,
-                changed_accuracy = evaluate_model_response.difference)
+                changed_accuracy = evaluate_model_response.difference,
+                trained_model_accuracy= evaluate_model_response.trained_model_accuracy,
+                best_model_accuracy = evaluate_model_response.best_model_accuracy)
 
             logging.info(f"Model evaluation artifact: {model_evaluation_artifact}")
             return model_evaluation_artifact

@@ -22,6 +22,7 @@ class classificationmetricartifact:
     f1_score: float
     precision_score: float
     recall_score: float 
+    accuracy: float
 
 @dataclass
 class modeltrainerartifact:
@@ -34,6 +35,8 @@ class modelevaluationartifact:
     changed_accuracy: float
     s3_model_path: str
     trained_model_path: str
+    trained_model_accuracy: float
+    best_model_accuracy: float
 
 @dataclass
 class modelpusherartifact:

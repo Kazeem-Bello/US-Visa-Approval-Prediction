@@ -23,6 +23,7 @@ class trainpipeline:
         self.modeltrainerconfig = modeltrainerconfig()
         self.modelevaluationconfig = modelevaluationconfig()
         self.modelpusherconfig = modelpusherconfig()
+        self.model_accuracy = None
 
     def start_data_ingestion(self) -> dataingestionartifact:
         "This method of the train_pipeline is responsible for starting the data ingestion component"
@@ -93,7 +94,9 @@ class trainpipeline:
                                                                      model_trainer_artifact = model_trainer_artifact)
             if not model_evaluation_artifact.is_model_accepted:
                 logging.info("Model not accepted")
+                self.model_accuracy = model_evaluation_artifact.best_model_accuracy
                 return None
+            self.model_accuracy = model_evaluation_artifact.trained_model_accuracy
             model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact = model_evaluation_artifact)
             
         except Exception as e:

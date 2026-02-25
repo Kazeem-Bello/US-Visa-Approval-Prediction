@@ -17,9 +17,14 @@
 
 # # print(database_name)
 
-# from us_visa.pipeline.train_pipeline import trainpipeline
+from us_visa.pipeline.train_pipeline import trainpipeline
+pipeline = trainpipeline()
+run = pipeline.run_pipeline()
 
-# pipeline = trainpipeline().run_pipeline()
+
+ac = pipeline.model_accuracy
+print(ac)
+
 # # # pipeline.run_pipeline()
 
 # # from dotenv import load_dotenv
@@ -35,19 +40,19 @@
 
 
 
-from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
-from fastapi.staticfiles import StaticFiles
+# from fastapi import FastAPI, Request
+# from fastapi.templating import Jinja2Templates
+# from fastapi.staticfiles import StaticFiles
 
-app = FastAPI()
+# app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+# app.mount("/static", StaticFiles(directory="static"), name="static")
 
-templates = Jinja2Templates(directory="templates")
+# templates = Jinja2Templates(directory="templates")
 
-@app.get("/")
-def home(request: Request):
-    return templates.TemplateResponse(
-        "index.html",
-        {"request": request, "context": "Predicting"}
-    )
+# @app.get("/")
+# def home(request: Request):
+#     return templates.TemplateResponse(
+#         "index.html",
+#         {"request": request, "context": "Predicting"}
+#     )
