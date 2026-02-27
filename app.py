@@ -6,6 +6,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.responses import HTMLResponse, RedirectResponse
 from uvicorn import run as app_run
 from typing import Optional
+import time
 
 from us_visa.constant import APP_HOST, APP_PORT
 from us_visa.pipeline.prediction_pipeline import UsvisaData, USvisaClassifier
@@ -59,7 +60,7 @@ class DataForm:
 async def index(request: Request):
 
     return templates.TemplateResponse(
-            "index.html",{"request": request, "context": "Waiting...", "status_code": None, "model_accurcy": None})
+            "index.html",{"request": request, "context": "Waiting...", "status_code": None, "model_accuracy": None, "prediction_time": None})
 
 
 @app.get("/train")
@@ -98,7 +99,12 @@ async def predictRouteClient(request: Request):
 
         model_predictor = USvisaClassifier()
 
+        start_time = time.time()
         value = model_predictor.predict(dataframe=usvisa_df)[0]
+        end_time = time.time()
+        prediction_time = end_time - start_time
+        prediction_time = f"{prediction_time:.4f}s"
+
         model_accuracy = model_predictor.accuracy()
         model_accuracy = f"{model_accuracy * 100:.2f}%"
 
@@ -110,7 +116,7 @@ async def predictRouteClient(request: Request):
 
         return templates.TemplateResponse(
             "index.html",
-            {"request": request, "context": status, "status_code": value, "model_accuracy": model_accuracy},
+            {"request": request, "context": status, "status_code": value, "model_accuracy": model_accuracy, "prediction_time": prediction_time},
         )
         
     except Exception as e:

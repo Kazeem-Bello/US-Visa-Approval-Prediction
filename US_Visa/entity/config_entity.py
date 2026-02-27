@@ -62,7 +62,7 @@ class predictionconfig:
 
 @dataclass
 class metricconfig:
-    metric_dir= os.path.join(trainingpipeline_config.artifact_dir, "metric", "metrics.csv")
+    metric_dir= os.path.join("metric", "metrics.csv")
 
 
 

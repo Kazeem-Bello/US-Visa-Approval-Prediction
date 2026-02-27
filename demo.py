@@ -17,9 +17,9 @@
 
 # # print(database_name)
 
-from us_visa.pipeline.train_pipeline import trainpipeline
-pipeline = trainpipeline()
-run = pipeline.run_pipeline()
+# from us_visa.pipeline.train_pipeline import trainpipeline
+# pipeline = trainpipeline()
+# run = pipeline.run_pipeline()
 
 
 # ac = pipeline.model_accuracy
@@ -56,3 +56,8 @@ run = pipeline.run_pipeline()
 #         "index.html",
 #         {"request": request, "context": "Predicting"}
 #     )
+
+
+from us_visa.entity.config_entity import predictionconfig, metricconfig
+
+print(metricconfig().metric_dir)
