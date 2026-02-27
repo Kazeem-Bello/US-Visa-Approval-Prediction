@@ -48,6 +48,11 @@ a {
   background: rgba(10, 15, 28, 0.6);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+  /* top: -1000; */
+  /* left: 0; */
 }
 
 .brand-mark {
@@ -85,7 +90,7 @@ a {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  /* gap: 400px; */
+  margin-top:50px;
 }
 
 .hero {
@@ -286,7 +291,7 @@ a {
 }
 
 .result-banner {
-  width: 80%;
+  width: 60%;
   display: flex;
   gap: 0.85rem;
   padding: 1rem;

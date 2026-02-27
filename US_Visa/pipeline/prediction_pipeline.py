@@ -2,13 +2,12 @@ import os
 import sys
 import numpy as np
 import pandas as pd
-from us_visa.entity.config_entity import predictionconfig
+from us_visa.entity.config_entity import predictionconfig, metricconfig
 from us_visa.entity.s3_estimator import USvisaEstimator
 from us_visa.exception import us_visa_exception
 from us_visa.logger import logging
 from us_visa.utils.main_utils import read_yaml_file
 from us_visa.pipeline.train_pipeline import trainpipeline
-
 
 
 class UsvisaData:
@@ -68,11 +67,11 @@ class UsvisaData:
             raise us_visa_exception(e, sys) from e
 
 
-
 class USvisaClassifier:
-    def __init__(self, prediction_config: predictionconfig = predictionconfig()) -> None:
+    def __init__(self, prediction_config: predictionconfig = predictionconfig(), metric_config: metricconfig = metricconfig()) -> None:
         try:
             self.prediction_config = prediction_config
+            self.metric_config = metric_config
         except Exception as e:
             raise us_visa_exception(e, sys) from e
         
@@ -85,6 +84,8 @@ class USvisaClassifier:
         except Exception as e:
             raise us_visa_exception(e, sys) from e
         
-def model_accuracy():
-    return trainpipeline().model_accuracy
+    def accuracy(self):
+        metric_df = pd.read_csv(self.metric_config.metric_dir)
+        model_accuracy = metric_df.loc[0, "accuracy"]
+        return model_accuracy
 

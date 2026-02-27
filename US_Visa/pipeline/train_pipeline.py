@@ -1,16 +1,18 @@
 import sys
+import pandas as pd
 from us_visa.components.data_ingestion import DataIngestion
 from us_visa.components.data_validation import DataValidation
 from us_visa.components.data_transformation import DataTransformation
 from us_visa.components.model_trainer import ModelTrainer
 from us_visa.components.model_pusher import ModelPusher
 from us_visa.components.model_evaluation import ModelEvaluation
-from us_visa.entity.config_entity import (dataingestionconfig, datavalidationconfig, datatransformationconfig, 
-                                          modeltrainerconfig, modelevaluationconfig, modelpusherconfig)
+from us_visa.entity.config_entity import (trainingpipelineconfig,dataingestionconfig, datavalidationconfig, datatransformationconfig, 
+                                          modeltrainerconfig, modelevaluationconfig, modelpusherconfig, metricconfig)
 from us_visa.entity.artifact_entity import (dataingestionartifact,datavalidationartifact, datatransformationartifact, 
                                             modeltrainerartifact, modelevaluationartifact, modelpusherartifact)
 from us_visa.exception import us_visa_exception
 from us_visa.logger import logging
+import os
 
 
 
@@ -23,7 +25,7 @@ class trainpipeline:
         self.modeltrainerconfig = modeltrainerconfig()
         self.modelevaluationconfig = modelevaluationconfig()
         self.modelpusherconfig = modelpusherconfig()
-        self.model_accuracy = None
+        self.metricconfig = metricconfig()
 
     def start_data_ingestion(self) -> dataingestionartifact:
         "This method of the train_pipeline is responsible for starting the data ingestion component"
@@ -92,11 +94,18 @@ class trainpipeline:
             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact = data_transformation_artifact)
             model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact = data_ingestion_artifact,
                                                                      model_trainer_artifact = model_trainer_artifact)
+            
+            metric_dir_name = os.path.dirname(self.metricconfig.metric_dir)
+            os.makedirs(metric_dir_name, exist_ok = True)
+            accuracy = model_evaluation_artifact.best_model_accuracy if not model_evaluation_artifact.is_model_accepted else model_evaluation_artifact.trained_model_accuracy
+            logging.info("Saving the metrics of the model")
+            metric_df = pd.DataFrame({"accuracy": [accuracy]})
+            metric_df.to_csv(self.metricconfig.metric_dir, index = False, header = True)
+            logging.info(f"Model metrics saved at {self.metricconfig.metric_dir}")
+
             if not model_evaluation_artifact.is_model_accepted:
-                logging.info("Model not accepted")
-                self.model_accuracy = model_evaluation_artifact.best_model_accuracy
+                logging.info("Trained model not accepted. Production model in use")
                 return None
-            self.model_accuracy = model_evaluation_artifact.trained_model_accuracy
             model_pusher_artifact = self.start_model_pusher(model_evaluation_artifact = model_evaluation_artifact)
             
         except Exception as e:

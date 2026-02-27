@@ -27,7 +27,6 @@ app.add_middleware(
     allow_headers = ["*"]
 )
 
-
 class DataForm:
     def __init__(self, request: Request):
         self.request: Request = request
@@ -100,7 +99,8 @@ async def predictRouteClient(request: Request):
         model_predictor = USvisaClassifier()
 
         value = model_predictor.predict(dataframe=usvisa_df)[0]
-        status_code = value
+        model_accuracy = model_predictor.accuracy()
+        model_accuracy = f"{model_accuracy * 100:.2f}%"
 
         status = None
         if value == 1:
@@ -110,7 +110,7 @@ async def predictRouteClient(request: Request):
 
         return templates.TemplateResponse(
             "index.html",
-            {"request": request, "context": status, "status_code": value},
+            {"request": request, "context": status, "status_code": value, "model_accuracy": model_accuracy},
         )
         
     except Exception as e:

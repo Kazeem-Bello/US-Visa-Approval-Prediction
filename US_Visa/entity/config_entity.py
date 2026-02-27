@@ -60,6 +60,11 @@ class predictionconfig:
     model_file_name = model_file_name
     model_bucket_name = model_bucket_name
 
+@dataclass
+class metricconfig:
+    metric_dir= os.path.join(trainingpipeline_config.artifact_dir, "metric", "metrics.csv")
+
+
 
 
 
