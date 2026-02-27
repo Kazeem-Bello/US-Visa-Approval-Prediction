@@ -80,6 +80,14 @@ a {
 }
 
 /* ---------- Hero ---------- */
+.intro{
+  /* background-color: red; */
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  /* gap: 400px; */
+}
+
 .hero {
   padding: 3.2rem 0 1.8rem;
 }
@@ -238,12 +246,29 @@ a {
   border-radius: 14px;
   border-color: rgba(255, 255, 255, 0.25);
   color: var(--text);
-}
+}ß
 
 .btn-outline-light:hover {
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.3);
   color: var(--text);
+}
+
+.form-result{
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  gap: 20px;
+} 
+
+.form{
+  margin: 0 auto;
+  margin-top: 5px;
+}
+
+.result{
+  margin: 0 auto;
+  width: 60%;
 }
 
 /* ---------- Result Card ---------- */

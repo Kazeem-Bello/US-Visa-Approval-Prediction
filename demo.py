@@ -17,13 +17,13 @@
 
 # # print(database_name)
 
-from us_visa.pipeline.train_pipeline import trainpipeline
-pipeline = trainpipeline()
-run = pipeline.run_pipeline()
+# from us_visa.pipeline.train_pipeline import trainpipeline
+# pipeline = trainpipeline()
+# run = pipeline.run_pipeline()
 
 
-ac = pipeline.model_accuracy
-print(ac)
+# ac = pipeline.model_accuracy
+# print(ac)
 
 # # # pipeline.run_pipeline()
 
@@ -56,3 +56,11 @@ print(ac)
 #         "index.html",
 #         {"request": request, "context": "Predicting"}
 #     )
+
+
+
+from us_visa.pipeline.prediction_pipeline import model_accuracy
+
+ac = model_accuracy
+
+print(ac)

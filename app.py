@@ -60,7 +60,7 @@ class DataForm:
 async def index(request: Request):
 
     return templates.TemplateResponse(
-            "index.html",{"request": request, "context": "Rendering", "status_code": None})
+            "index.html",{"request": request, "context": "Waiting...", "status_code": None, "model_accurcy": None})
 
 
 @app.get("/train")

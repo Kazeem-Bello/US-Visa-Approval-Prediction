@@ -7,6 +7,8 @@ from us_visa.entity.s3_estimator import USvisaEstimator
 from us_visa.exception import us_visa_exception
 from us_visa.logger import logging
 from us_visa.utils.main_utils import read_yaml_file
+from us_visa.pipeline.train_pipeline import trainpipeline
+
 
 
 class UsvisaData:
@@ -82,4 +84,7 @@ class USvisaClassifier:
             return result
         except Exception as e:
             raise us_visa_exception(e, sys) from e
+        
+def model_accuracy():
+    return trainpipeline().model_accuracy
 
