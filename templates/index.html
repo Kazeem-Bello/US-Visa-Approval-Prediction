@@ -101,7 +101,7 @@
                 </div>
               </div>
 
-              <form action="/" method="post" class="app-form">
+              <form action="/predict" method="post" class="app-form", id="visaForm">
                 <div class="row g-3">
                   <div class="col-md-6">
                     <label class="form-label" for="continent">Continent</label>
@@ -219,7 +219,7 @@
                   </div>
 
                   <div class="col-12 d-flex gap-2 mt-2">
-                    <button class="btn btn-primary btn-lg flex-grow-1" type="submit">
+                    <button class="btn btn-primary btn-lg flex-grow-1" type="submit" id="predictBtn">
                       <i class="bi bi-magic me-2"></i> Predict Visa Status
                     </button>
                     <a class="btn btn-outline-light btn-lg" href="/">
@@ -232,7 +232,7 @@
           </div>
 
           <!-- Result / Info Card -->
-          <div class="col-lg-4 result">
+          <div class="col-lg-4 result" id="predictionBox">
             <div class="app-card sticky-card">
               <div class="result-header">
                 <h3 class="h4 mb-1">Prediction Result</h3>
@@ -244,8 +244,7 @@
                 <div class="result-icon">
                   <i class="bi bi-info-circle"></i>
                 </div>
-                <div class="result-value"> {{ context }}
-              </div>
+                <div class="result-value" id="predictionResult"></div>
               </div>
               <div>
 
@@ -254,11 +253,11 @@
               <div class="sub">
                 <div class="d-flex align-items-start gap-2 mb-2">
                   <i class="bi bi-shield-lock mt-1"></i>
-                    <div class="sub">Model Accuracy: {{ model_accuracy }}</div>
+                    <div class="sub" id="accuracyResult" ></div>
                 </div>
                                 <div class="d-flex align-items-start gap-2 mb-2">
                   <i class="bi bi-shield-lock mt-1"></i>
-                    <div class="sub">Prediction Time: {{ prediction_time }}</div>
+                    <div class="sub" id="predictionTimeResult"></div>
                 </div>
               </div>
               <div class="sub">
@@ -289,22 +288,83 @@
     ></script>
 
   <script>
-  (function () {
-    const banner = document.getElementById("resultBanner");
-    if (!banner) return;
 
-    const prediction_status = {{ status_code | tojson }};
 
-    // Remove any previous classes
-    banner.classList.remove("result-approved", "result-denied");
+  const visaForm = document.getElementById("visaForm");
+  const predictionBox = document.getElementById("predictionBox");
+  const predictionResult = document.getElementById("predictionResult");
+  const accuracyResult = document.getElementById("accuracyResult");
+  const predictionTimeResult = document.getElementById("predictionTimeResult");
+  const banner = document.getElementById("resultBanner");
+  const submitButton = visaForm.querySelector('button[type="submit"]');
 
-    if (prediction_status === 1) {
-      banner.classList.add("result-approved");
-    } else if (prediction_status === 0) {
-      banner.classList.add("result-denied");
+  predictionResult.textContent = `Waiting for input...`;
+  accuracyResult.textContent = `Model Accuracy: `;
+  predictionTimeResult.textContent = `Prediction Time:`;
+  
+
+  visaForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    const payload = {
+      continent: document.getElementById("continent").value,
+      education_of_employee: document.getElementById("education_of_employee").value,
+      has_job_experience: document.getElementById("has_job_experience").value,
+      requires_job_training: document.getElementById("requires_job_training").value,
+      no_of_employees: Number(document.getElementById("no_of_employees").value),
+      region_of_employment: document.getElementById("region_of_employment").value,
+      prevailing_wage: Number(document.getElementById("prevailing_wage").value),
+      unit_of_wage: document.getElementById("unit_of_wage").value,
+      full_time_position: document.getElementById("full_time_position").value,
+      company_age: Number(document.getElementById("company_age").value)
+    };
+
+    submitButton.disabled = true;
+    submitButton.innerHTML = 'Predicting...';
+
+    try {
+      const response = await fetch("/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        predictionResult.textContent = data.detail;
+        return;
+      }
+
+      predictionResult.textContent = data.prediction;
+      accuracyResult.textContent = `Model Accuracy: ${data.model_accuracy}`;
+      predictionTimeResult.textContent = `Prediction Time: ${data.prediction_time}`;
+
+      (function () {
+        if (!banner) return;
+
+        // const prediction_status = {{ status_code | tojson }};
+
+        banner.classList.remove("result-approved", "result-denied");
+
+        if (data.prediction === "Approved") {
+          banner.classList.add("result-approved");
+        } else if (data.prediction === "Denied") {
+          banner.classList.add("result-denied");
+        }
+      })();
+
+
+
+    } catch (error) {
+      predictionResult.textContent = "Could not connect to the server.";
+    } finally {
+      submitButton.disabled = false;
+      submitButton.innerHTML = '<i class="bi bi-magic me-2"></i> Predict Visa Status';
     }
-
-  })();
+  });
 </script>
   </body>
 </html>

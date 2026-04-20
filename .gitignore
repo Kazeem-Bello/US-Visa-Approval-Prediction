@@ -160,3 +160,7 @@ cython_debug/
 #.idea/
 artifact/*
 setup.py
+templates copy/
+static copy/
+new_UI/
+demo.py
